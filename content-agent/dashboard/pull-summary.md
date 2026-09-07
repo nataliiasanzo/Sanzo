@@ -1,6 +1,6 @@
-# Data pull — 2026-08-31
+# Data pull — 2026-09-07
 
-**Status: FAILED — cycle continued on cached data** (`dashboard/data.json` still holds the Aug 27 pull)
+**Status: FAILED — cycle continued on cached data** (`dashboard/data.json` still holds the Aug 27 pull; failed identically on one retry)
 
 Console output of the pull step:
 
@@ -17,8 +17,8 @@ FAILED: Apify 403 on /acts/apify~instagram-scraper/runs: {
 Pull failed — continuing with cached data (digest will say so).
 ```
 
-## Diagnosis
+## Diagnosis — needs your action
 
-Same as the Aug 28 run: the Apify account's **monthly usage hard limit** is exhausted, so the platform refuses to start actor runs (HTTP 403, `platform-feature-disabled`). Not a code bug. The monthly cycle should reset around Sep 1; the next weekly run (Sep 7) should pull fresh data. If it fails again, raise the limit in Apify Console → Billing → Limits.
+Third consecutive failed pull (Aug 28, Aug 31, Sep 7), all with the same 403 `platform-feature-disabled` / "Monthly usage hard limit exceeded". **The new calendar month did NOT clear it**, so waiting won't fix this: either the Apify billing cycle hasn't rolled over yet, or the account's monthly usage hard limit is set at (or near) zero, or the plan itself is out of credit.
 
-Thanks to the new fallback in `run-all.js`, the rest of the cycle still ran: `agents.json` was regenerated from cached data and the Telegram digest went out flagged as stale.
+**To fix:** log into Apify Console → Billing → Limits, check the "monthly usage hard limit" and raise or remove it (or upgrade the plan / wait for the account's own billing-cycle reset date shown there). Until then, every weekly run will send the digest from the cached Aug 27 data with a stale-data warning.
